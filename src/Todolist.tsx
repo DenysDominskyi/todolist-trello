@@ -1,11 +1,11 @@
-import { FilterValuesType } from "./App"
+import { FilterType } from "./App"
 import { Button } from "./Button"
 
 type TodolistPropsType = {
     title: string
     tasks: Array<TaskType>
     removeTask: (id: number) => void
-    changeFilter: (value: FilterValuesType) => void
+    changeFilter: (value: FilterType) => void
 }
 
 export type TaskType = {
@@ -14,15 +14,14 @@ export type TaskType = {
     isDone: boolean
 }
 
-export const Todolist = (props: TodolistPropsType) => {
+export const Todolist = ({title, tasks, removeTask, changeFilter}: TodolistPropsType) => {
 
-    const tasksList: Array<JSX.Element> = props.tasks.map((task: TaskType) => {
-
+    const tasksList: Array<JSX.Element> = tasks.map((task: TaskType) => {
         return (
             <li key={task.id}>
                 <input type="checkbox" checked={task.isDone} />
                 <span>{task.title}</span>
-                <button onClick={ () => {props.removeTask(task.id)} }>x</button>
+                <Button title='x' onClickHandler={() => removeTask(task.id)}/>
             </li>
         )
     })
@@ -30,7 +29,7 @@ export const Todolist = (props: TodolistPropsType) => {
 
     return (
         <div className='todolist'>
-            <h3>{props.title}</h3>
+            <h3>{title}</h3>
             <div>
                 <input />
                 <Button title="+"/>
@@ -39,9 +38,9 @@ export const Todolist = (props: TodolistPropsType) => {
                 {tasksList}
             </ul>
             <div>
-                <Button title="All"/>
-                <Button title="Active"/>
-                <Button title="Completed"/>
+                <Button title="All" onClickHandler={() => changeFilter('all')}/>
+                <Button title="Active" onClickHandler={() => changeFilter('active')}/>
+                <Button title="Completed" onClickHandler={() => changeFilter('completed')}/>
             </div>
         </div>
     )
