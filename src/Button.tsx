@@ -4,11 +4,18 @@ type ButtonPropsType = {
     onClickHandler?: () => void
 
     disabled?: boolean
+    styledClass?: string
 }
 
 export const Button = (props: ButtonPropsType) => {
 
     return (
-        <button disabled={props.disabled} onClick={props.onClickHandler}>{props.title}</button>
+        <button
+            className={props.styledClass}
+            disabled={props.disabled}
+            onClick={props.onClickHandler}
+        >
+            {props.title}
+        </button>
     )
 }

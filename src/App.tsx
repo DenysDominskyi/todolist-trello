@@ -9,33 +9,38 @@ function App() {
     // BLL
 
     const [tasks, setTasks] = useState<Array<TaskType>>([
-        {id: v1(), title: "CSS", isDone: true},
-        {id: v1(), title: "JS/TS", isDone: true},
-        {id: v1(), title: "React", isDone: false},
-        {id: v1(), title: "Redux", isDone: false},
+        { id: v1(), title: "CSS", isDone: true },
+        { id: v1(), title: "JS/TS", isDone: true },
+        { id: v1(), title: "React", isDone: false },
+        { id: v1(), title: "Redux", isDone: false },
     ])
     const [filter, setFilter] = useState<FilterType>('all')
 
-    
+
     let filteredTasks: Array<TaskType> = tasks
-    if(filter === 'active') {
+    if (filter === 'active') {
         filteredTasks = tasks.filter(t => t.isDone === false)
     }
-    if(filter === 'completed') {
+    if (filter === 'completed') {
         filteredTasks = tasks.filter(t => t.isDone === true)
     }
 
-    function addTask (title: string) {
-        let newTask = {id: v1(), title: title, isDone: false}
+    function addTask(title: string) {
+        let newTask = { id: v1(), title: title, isDone: false }
         setTasks([newTask, ...tasks])
     }
     function removeTask(id: string) {
-        const filteredTasks = tasks.filter( t => t.id !== id)
+        const filteredTasks = tasks.filter(t => t.id !== id)
         setTasks(filteredTasks)
     }
-
+    function changeTaskStatus(taskId: string, newStatus: boolean) {
+        const nextState: Array<TaskType> = tasks.map(t => t.id === taskId ? {...t, isDone: newStatus} : t)
+        setTasks(nextState)
+    }
     const changeFilter = (value: FilterType) => setFilter(value)
-    
+
+
+
     // UI
     return (
         <div className="App">
@@ -45,6 +50,8 @@ function App() {
                 removeTask={removeTask}
                 addTask={addTask}
                 changeFilter={changeFilter}
+                changeTaskStatus={changeTaskStatus}
+                filter={filter}
             />
         </div>
     );
