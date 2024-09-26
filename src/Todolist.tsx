@@ -1,9 +1,10 @@
-import { ChangeEvent, KeyboardEvent, useState } from "react"
+import { useState } from "react"
 import { FilterType } from "./App"
-import { Button } from "./Button"
+import { TodolistHeader } from "./TodolistHeader"
+import { TodolistBody } from "./TodolistBody"
 
 type TodolistPropsType = {
-    id: string
+    todolistId: string
     title: string
     tasks: Array<TaskType>
     filter: FilterType
@@ -11,9 +12,11 @@ type TodolistPropsType = {
     addTask: (title: string, listTaskId: string) => void
     removeTask: (id: string, todolistId: string) => void
     changeTaskStatus: (taskId: string, newStatus: boolean, todolistId: string) => void
-    
-    changeTodolistFilter: (value: FilterType, todolistId: string) => void
+    changeTaskTitle: (taskId: string, newTitle: string, todolistId: string) => void
+
     removeTodolist: (todolistId: string) => void
+    changeTodolistFilter: (value: FilterType, todolistId: string) => void
+    changeTodolistTitle: (newTitle: string, todolistId: string) => void
 }
 
 export type TaskType = {
@@ -24,96 +27,45 @@ export type TaskType = {
 
 export const Todolist = (
     {
-        id,
+        todolistId,
         title,
         tasks,
         filter,
+
         addTask,
         removeTask,
         changeTaskStatus,
+        changeTaskTitle,
+
         changeTodolistFilter,
         removeTodolist,
+        changeTodolistTitle
     }: TodolistPropsType) => {
 
-    const [newTaskTitle, setNewTaskTitle] = useState('')
-    const [inputError, setInputError] = useState<boolean>(false)
+    const [collapsed, setCollapsed] = useState(false)
 
-    let titleLength = newTaskTitle.length
-    let lengthToLong = titleLength > 10
-    let disableBtn = !newTaskTitle
-
-    function onNewTitleChangeHandle(e: ChangeEvent<HTMLInputElement>) {
-        setInputError(false)
-        setNewTaskTitle(e.currentTarget.value)
-    }
-    function addTaskHandler() {
-        const trimmedTitle = newTaskTitle.trim()
-        if (!disableBtn && !lengthToLong && trimmedTitle) {
-            addTask(trimmedTitle, id)
-        } else {
-            setInputError(true)
-        }
-        setNewTaskTitle('')
-    }
-    function onKeyPressHandler(e: KeyboardEvent<HTMLInputElement>) {
-        if (e.key === 'Enter' && !lengthToLong && !disableBtn) {
-            addTask(newTaskTitle, id)
-            setNewTaskTitle('')
-        }
-    }
-    function onAllClickHandler() {
-        changeTodolistFilter('all', id)
-    }
-    function onActiveClickHandler() {
-        changeTodolistFilter('active', id)
-    }
-    function onCompletedClickHandler() {
-        changeTodolistFilter('completed', id)
-    }
-    function removeTodolistHandler() {
-        removeTodolist(id)
-    }
-
+    const setTodolistNewTitle = (newTitle: string) => changeTodolistTitle(newTitle, todolistId)
 
     return (
         <div className='todolist'>
-            <h3>{title}<button onClick={removeTodolistHandler}>x</button></h3>
-            <div>
-                <input
-                    value={newTaskTitle}
-                    onChange={onNewTitleChangeHandle}
-                    onKeyDown={onKeyPressHandler}
-                    className={inputError ? 'input-error' : ''}
-                />
-                <Button disabled={disableBtn || (titleLength > 10)} title="+" onClickHandler={addTaskHandler} />
-                {disableBtn && !inputError && <p style={{ color: "skyblue" }}>Title can't be empty</p>}
-                {!disableBtn && !inputError && (titleLength <= 10) && <p style={{ color: 'darkgreen' }}>Maximum {10 - titleLength} characters</p>}
-                {lengthToLong && <p style={{ color: 'darkred' }}>Title to long</p>}
-                {inputError && <div style={{ color: 'red' }}>Title is required</div>}
-            </div>
-            <ul>
-                {tasks.map((task: TaskType) => {
-                    const onChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
-                        changeTaskStatus(task.id, e.currentTarget.checked, id)
-                    }
-
-                    return <li key={task.id}>
-                        <input
-                            type="checkbox"
-                            checked={task.isDone}
-                            onChange={onChangeHandler}
-                        />
-                        <span className={task.isDone ? 'is-done' : 'task'}>{task.title}</span>
-                        <Button title='x' onClickHandler={() => removeTask(task.id, id)} />
-                    </li>
-                })
-                }
-            </ul>
-            <div>
-                <Button styledClass={filter === 'all' ? 'active-filter' : ''} title="All" onClickHandler={onAllClickHandler} />
-                <Button styledClass={filter === 'active' ? 'active-filter' : ''} title="Active" onClickHandler={onActiveClickHandler} />
-                <Button styledClass={filter === 'completed' ? 'active-filter' : ''} title="Completed" onClickHandler={onCompletedClickHandler} />
-            </div>
+            <TodolistHeader
+                title={title}
+                isCollapsed={collapsed}
+                toggleCollapsed={() => setCollapsed(!collapsed)}
+                removeTodolist={() => removeTodolist(todolistId)}
+                changeTodolistTitle={setTodolistNewTitle}
+            />
+            {!collapsed &&
+                <TodolistBody
+                    tasks={tasks}
+                    filter={filter}
+                    todolistId={todolistId}
+                    addTask={addTask}
+                    removeTask={removeTask}
+                    changeTaskStatus={changeTaskStatus}
+                    changeTaskTitle={changeTaskTitle}
+                    changeTodolistFilter={changeTodolistFilter}
+                />}
         </div >
     )
 }

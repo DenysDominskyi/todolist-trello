@@ -10,7 +10,7 @@ type ButtonPropsType = {
 export const Button = (props: ButtonPropsType) => {
 
     return (
-        <button
+        <button style={{cursor: 'pointer'}}
             className={props.styledClass}
             disabled={props.disabled}
             onClick={props.onClickHandler}
