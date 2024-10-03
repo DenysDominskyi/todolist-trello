@@ -1,5 +1,6 @@
-import React from 'react'
 import { EditableSpan } from './EditableSpan'
+import { IconButton, Switch } from '@mui/material'
+import { DeleteForever } from '@mui/icons-material'
 
 type TodolistHeaderPropsType = {
     title: string
@@ -16,12 +17,18 @@ export const TodolistHeader = (props: TodolistHeaderPropsType) => {
                 title={props.title}
                 changeItemTitle={props.changeTodolistTitle}
             />
-            <button onClick={props.removeTodolist}>x</button>
-            <input
-                type="checkbox"
+            <Switch
                 onChange={props.toggleCollapsed}
-                checked={props.isCollapsed}
+                checked={!props.isCollapsed}
+                size='small'
             />
+            <IconButton
+                onClick={props.removeTodolist}
+                color="primary"
+                size="medium"
+            >
+                <DeleteForever fontSize="inherit" />
+            </IconButton>
         </h3>
     )
 }

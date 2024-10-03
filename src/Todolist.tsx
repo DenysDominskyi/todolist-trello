@@ -2,6 +2,8 @@ import { useState } from "react"
 import { FilterType } from "./App"
 import { TodolistHeader } from "./TodolistHeader"
 import { TodolistBody } from "./TodolistBody"
+import { Box } from "@mui/material"
+import { todolistSx } from "./todolist.styles"
 
 type TodolistPropsType = {
     todolistId: string
@@ -47,7 +49,7 @@ export const Todolist = (
     const setTodolistNewTitle = (newTitle: string) => changeTodolistTitle(newTitle, todolistId)
 
     return (
-        <div className='todolist'>
+        <Box sx={todolistSx}>
             <TodolistHeader
                 title={title}
                 isCollapsed={collapsed}
@@ -66,6 +68,7 @@ export const Todolist = (
                     changeTaskTitle={changeTaskTitle}
                     changeTodolistFilter={changeTodolistFilter}
                 />}
-        </div >
+        </Box >
+
     )
 }

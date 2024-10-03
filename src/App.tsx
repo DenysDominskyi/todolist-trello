@@ -3,6 +3,8 @@ import { useState } from 'react';
 import { TaskType, Todolist } from './Todolist';
 import { v1 } from 'uuid';
 import { AddItemForm } from './AddItemForm';
+import { AppBar, Box, Button, Container, createTheme, CssBaseline, Grid2, IconButton, Paper, Switch, ThemeProvider, Toolbar } from '@mui/material';
+import { Menu } from '@mui/icons-material';
 
 export type FilterType = 'all' | 'active' | 'completed'
 
@@ -18,6 +20,8 @@ type TasksStateType = {
 
 function App() {
     // BLL
+    const [isLightMode, setIsLightMode] = useState(true)
+
     const listTaskId1 = v1()
     const listTaskId2 = v1()
 
@@ -90,27 +94,20 @@ function App() {
         }
         setTasks(nextState)
     }
+    
+    const TodolistComponents: Array<JSX.Element> = todoLists.map((tl) => {
+        let filteredTasks = tasks[tl.id]
+        if (tl.filter === 'active') {
+            filteredTasks = filteredTasks.filter(t => t.isDone === false)
+        }
+        if (tl.filter === 'completed') {
+            filteredTasks = filteredTasks.filter(t => t.isDone === true)
+        }
 
-
-    // UI
-    return (
-        <div className="App">
-            <AddItemForm
-                maxTitleLength={12}
-                addItem={addTodolist}
-            />
-            {todoLists.map((tl) => {
-                let filteredTasks = tasks[tl.id]
-                if (tl.filter === 'active') {
-                    filteredTasks = filteredTasks.filter(t => t.isDone === false)
-                }
-                if (tl.filter === 'completed') {
-                    filteredTasks = filteredTasks.filter(t => t.isDone === true)
-                }
-
-                return (
+        return (
+            <Grid2 key={tl.id}>
+                <Paper sx={{ display: 'flex' }} elevation={3}>
                     <Todolist
-                        key={tl.id}
                         todolistId={tl.id}
                         title={tl.title}
                         filter={tl.filter}
@@ -123,9 +120,58 @@ function App() {
                         removeTodolist={removeTodolist}
                         changeTodolistTitle={changeTodolistTitle}
                     />
-                )
-            })}
-        </div>
+                </Paper>
+            </Grid2>
+        )
+    })
+
+    // MUI customization
+    const theme = createTheme({
+        palette: {
+            primary: {
+                main: '#E0C2FF',
+                light: '#F5EBFF',
+                contrastText: '#47008F',
+            },
+            secondary: {
+                main: '#FF5733',
+            },
+            mode: isLightMode ? 'light' : 'dark'
+        },
+    });
+
+    // UI
+    return (
+        <ThemeProvider theme={theme}>
+            <CssBaseline />
+            <div className="App">
+                <AppBar position='static' color='secondary'>
+                    <Toolbar sx={{ justifyContent: 'space-between' }}>
+                        <IconButton color='inherit'>
+                            <Menu />
+                        </IconButton>
+                        <Box>
+                            <Switch onChange={()=>setIsLightMode(!isLightMode)}/>
+                            <Button color='inherit'>Login</Button>
+                        </Box>
+                    </Toolbar>
+                </AppBar>
+                <Container fixed>
+                    <Grid2
+                        container
+                        sx={{ mt: '15px' }}
+                    >
+                        <AddItemForm
+                            addItem={addTodolist}
+                            maxTitleLength={12}
+                        />
+                    </Grid2>
+                    <Grid2 container spacing={2}>
+                        {TodolistComponents}
+                    </Grid2>
+                </Container>
+            </div>
+        </ThemeProvider>
     );
 }
 

@@ -1,9 +1,10 @@
-import { Button } from './Button'
 import { FilterType } from './App'
 import { TaskType } from './Todolist'
 import { ChangeEvent } from 'react'
 import { AddItemForm } from './AddItemForm'
 import { EditableSpan } from './EditableSpan'
+import { Button, Checkbox, IconButton, List, ListItem } from '@mui/material'
+import { Backspace } from '@mui/icons-material'
 
 type TodolistBodyPropsType = {
     tasks: Array<TaskType>
@@ -15,6 +16,12 @@ type TodolistBodyPropsType = {
     removeTask: (id: string, todolistId: string) => void
     changeTaskStatus: (taskId: string, newStatus: boolean, todolistId: string) => void
     changeTaskTitle: (taskId: string, newTitle: string, todolistId: string) => void
+}
+
+type ButtonsDataType = {
+    title: string
+    onClickHandler: () => void
+    color: "inherit" | "primary" | "secondary"
 }
 
 export const TodolistBody = ({
@@ -29,21 +36,21 @@ export const TodolistBody = ({
 }: TodolistBodyPropsType) => {
 
 
-    const buttonsData = [
+    const buttonsData: ButtonsDataType[] = [
         {
             title: "All",
             onClickHandler: setFilterHandlerCreator('all'),
-            classes: filter === 'all' ? 'filter-btn-active' : ''
+            color: filter === 'all' ? 'secondary' : 'inherit'
         },
         {
             title: "Active",
             onClickHandler: setFilterHandlerCreator('active'),
-            classes: filter === 'active' ? 'filter-btn-active' : ''
+            color: filter === 'active' ? 'secondary' : 'inherit'
         },
         {
             title: "Completed",
             onClickHandler: setFilterHandlerCreator('completed'),
-            classes: filter === 'completed' ? 'filter-btn-active' : ''
+            color: filter === 'completed' ? 'secondary' : 'inherit'
         },
     ]
 
@@ -51,10 +58,13 @@ export const TodolistBody = ({
         return (
             <Button
                 key={btn.title}
-                title={btn.title}
-                styledClass={btn.classes}
-                onClickHandler={btn.onClickHandler}
-            />
+                onClick={btn.onClickHandler}
+                variant="contained"
+                color={btn.color}
+                size="small"
+            >
+                {btn.title}
+            </Button>
         )
     })
 
@@ -69,15 +79,35 @@ export const TodolistBody = ({
 
         const tasksClasses: string = task.isDone ? 'is-done' : 'task'
 
-        return <li key={task.id} className={tasksClasses}>
-            <input
-                type="checkbox"
-                checked={task.isDone}
-                onChange={onChangeHandler}
-            />
-            <EditableSpan title={task.title} changeItemTitle={setTaskNewTitle}/>
-            <Button title='x' onClickHandler={onClickRemoveHandler} />
-        </li>
+        return (
+            <ListItem
+                key={task.id}
+                divider
+                className={tasksClasses}
+                disablePadding={true}
+                secondaryAction={
+                    <IconButton
+                        onClick={onClickRemoveHandler}
+                        color="secondary"
+                        size="small"
+                    >
+                        <Backspace fontSize="inherit" />
+                    </IconButton>
+                }
+            >
+                <Checkbox
+                    checked={task.isDone}
+                    onChange={onChangeHandler}
+                    color="secondary"
+                    size='small'
+                />
+                <EditableSpan
+                    title={task.title}
+                    changeItemTitle={setTaskNewTitle}
+                />
+
+            </ListItem>
+        )
     })
 
     // handlers
@@ -91,9 +121,9 @@ export const TodolistBody = ({
     return (
         <>
             <AddItemForm maxTitleLength={10} addItem={addTaskHandler} />
-            <ul>
+            <List>
                 {tasksList}
-            </ul>
+            </List>
             <div>
                 {filterButtons}
             </div>

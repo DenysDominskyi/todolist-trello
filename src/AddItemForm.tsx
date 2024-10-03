@@ -1,5 +1,6 @@
-import React, { ChangeEvent, KeyboardEvent, useState } from 'react'
-import { Button } from './Button'
+import { IconButton, TextField} from '@mui/material'
+import { ChangeEvent, KeyboardEvent, useState } from 'react'
+import { AddBox } from '@mui/icons-material'
 
 type AddItemFormPropsType = {
     maxTitleLength: number
@@ -8,7 +9,7 @@ type AddItemFormPropsType = {
 
 export const AddItemForm = ({
     maxTitleLength,
-    addItem
+    addItem,
 }: AddItemFormPropsType) => {
     // local states
     const [inputError, setInputError] = useState(false)
@@ -40,23 +41,50 @@ export const AddItemForm = ({
     const userLengthMessage = `There are ${maxTitleLength - titleInputValue.length} characters left to enter`
     const userErrorLengthMessage = titleInputValue.length > maxTitleLength
 
+
+    let makeHelperText = () => {
+        let myText = ''
+        if (isInputBtnDisabled && !inputError) {
+            myText = `Max length task title is ${maxTitleLength} symbols`
+        }
+        if (!isInputBtnDisabled && !inputError && !userErrorLengthMessage) {
+            myText = userLengthMessage
+        }
+        if (userErrorLengthMessage) {
+            myText = 'Title to long'
+        }
+        if (inputError) {
+            myText = 'Title is required'
+        }
+        return myText
+    }
     return (
         <div>
-            <input
+            <TextField
+                variant="outlined"
+                size='small'
                 value={titleInputValue}
                 onChange={onNewTitleChangeHandle}
                 onKeyDown={onKeyPressHandler}
-                className={inputError ? 'input-error' : ''}
+                error={inputError}
+                label='Task text'
+                helperText={makeHelperText()}
             />
-            <Button
-                title="+"
+
+            <IconButton
                 disabled={isInputBtnDisabled || userErrorLengthMessage}
-                onClickHandler={addItemHandler}
-            />
-            {isInputBtnDisabled && !inputError && <p style={{ color: "skyblue" }}>Max length task title is {maxTitleLength} symbols</p>}
+                onClick={addItemHandler}
+                color='primary'
+                size="medium"
+                sx={{ml: '10px'}}
+            >
+                <AddBox fontSize='inherit' />
+            </IconButton>
+
+            {/* {isInputBtnDisabled && !inputError && <p style={{ color: "skyblue" }}>Max length task title is {maxTitleLength} symbols</p>}
             {!isInputBtnDisabled && !inputError && !userErrorLengthMessage && <p style={{ color: 'darkgreen' }}>{userLengthMessage}</p>}
             {userErrorLengthMessage && <p style={{ color: 'darkred' }}>Title to long</p>}
-            {inputError && <div style={{ color: 'red' }}>Title is required</div>}
+            {inputError && <div style={{ color: 'red' }}>Title is required</div>} */}
         </div>
     )
 }
