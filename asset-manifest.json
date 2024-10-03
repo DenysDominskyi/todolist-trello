@@ -1,13 +1,13 @@
 {
   "files": {
-    "main.css": "/todolist-trello/static/css/main.9bf1cafb.css",
-    "main.js": "/todolist-trello/static/js/main.d3773d4c.js",
+    "main.css": "/todolist-trello/static/css/main.daa22e26.css",
+    "main.js": "/todolist-trello/static/js/main.179e2424.js",
     "index.html": "/todolist-trello/index.html",
-    "main.9bf1cafb.css.map": "/todolist-trello/static/css/main.9bf1cafb.css.map",
-    "main.d3773d4c.js.map": "/todolist-trello/static/js/main.d3773d4c.js.map"
+    "main.daa22e26.css.map": "/todolist-trello/static/css/main.daa22e26.css.map",
+    "main.179e2424.js.map": "/todolist-trello/static/js/main.179e2424.js.map"
   },
   "entrypoints": [
-    "static/css/main.9bf1cafb.css",
-    "static/js/main.d3773d4c.js"
+    "static/css/main.daa22e26.css",
+    "static/js/main.179e2424.js"
   ]
 }
