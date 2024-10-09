@@ -80,11 +80,6 @@ export const AddItemForm = ({
             >
                 <AddBox fontSize='inherit' />
             </IconButton>
-
-            {/* {isInputBtnDisabled && !inputError && <p style={{ color: "skyblue" }}>Max length task title is {maxTitleLength} symbols</p>}
-            {!isInputBtnDisabled && !inputError && !userErrorLengthMessage && <p style={{ color: 'darkgreen' }}>{userLengthMessage}</p>}
-            {userErrorLengthMessage && <p style={{ color: 'darkred' }}>Title to long</p>}
-            {inputError && <div style={{ color: 'red' }}>Title is required</div>} */}
         </div>
     )
 }

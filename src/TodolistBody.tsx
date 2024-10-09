@@ -1,17 +1,17 @@
-import { FilterType } from './App'
 import { TaskType } from './Todolist'
 import { ChangeEvent } from 'react'
 import { AddItemForm } from './AddItemForm'
 import { EditableSpan } from './EditableSpan'
 import { Button, Checkbox, IconButton, List, ListItem } from '@mui/material'
 import { Backspace } from '@mui/icons-material'
+import { FilterValuesType } from './App'
 
 type TodolistBodyPropsType = {
     tasks: Array<TaskType>
-    filter: FilterType
+    filter: FilterValuesType
     todolistId: string
 
-    changeTodolistFilter: (value: FilterType, todolistId: string) => void
+    changeTodolistFilter: (value: FilterValuesType, todolistId: string) => void
     addTask: (title: string, listTaskId: string) => void
     removeTask: (id: string, todolistId: string) => void
     changeTaskStatus: (taskId: string, newStatus: boolean, todolistId: string) => void
@@ -34,7 +34,6 @@ export const TodolistBody = ({
     changeTaskStatus,
     changeTaskTitle
 }: TodolistBodyPropsType) => {
-
 
     const buttonsData: ButtonsDataType[] = [
         {
@@ -111,7 +110,7 @@ export const TodolistBody = ({
     })
 
     // handlers
-    function setFilterHandlerCreator(newFilterValue: FilterType) {
+    function setFilterHandlerCreator(newFilterValue: FilterValuesType) {
         return () => changeTodolistFilter(newFilterValue, todolistId)
     }
     function addTaskHandler(newTaskTitle: string) {

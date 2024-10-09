@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { FilterType } from "./App"
+import { FilterValuesType } from "./App"
 import { TodolistHeader } from "./TodolistHeader"
 import { TodolistBody } from "./TodolistBody"
 import { Box } from "@mui/material"
@@ -9,7 +9,7 @@ type TodolistPropsType = {
     todolistId: string
     title: string
     tasks: Array<TaskType>
-    filter: FilterType
+    filter: FilterValuesType
 
     addTask: (title: string, listTaskId: string) => void
     removeTask: (id: string, todolistId: string) => void
@@ -17,7 +17,7 @@ type TodolistPropsType = {
     changeTaskTitle: (taskId: string, newTitle: string, todolistId: string) => void
 
     removeTodolist: (todolistId: string) => void
-    changeTodolistFilter: (value: FilterType, todolistId: string) => void
+    changeTodolistFilter: (value: FilterValuesType, todolistId: string) => void
     changeTodolistTitle: (newTitle: string, todolistId: string) => void
 }
 
