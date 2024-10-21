@@ -1,36 +1,10 @@
 import { v1 } from "uuid";
-import { FilterValuesType, TodolistType } from "../App";
+import { FilterValuesType, TodolistType } from "../app/App";
 
-export type RemoveTodolistActionType = {
-    type: 'REMOVE-TODOLIST'
-    payload: {
-        id: string
-    }
-}
-
-export type AddTodolistActionType = {
-    type: 'ADD-TODOLIST'
-    payload: {
-        id: string
-        title: string
-    }
-}
-
-export type ChangeTodolistTitleActionType = {
-    type: 'CHANGE-TODOLIST-TITLE'
-    payload: {
-        id: string
-        title: string
-    }
-}
-
-export type ChangeTodolistFilterActionType = {
-    type: 'CHANGE-TODOLIST-FILTER'
-    payload: {
-        id: string
-        filter: FilterValuesType
-    }
-}
+export type RemoveTodolistActionType = ReturnType<typeof removeTodolistAC>
+export type AddTodolistActionType = ReturnType<typeof addTodolistAC>
+export type ChangeTodolistTitleActionType = ReturnType<typeof changeTodolistTitleAC>
+export type ChangeTodolistFilterActionType = ReturnType<typeof changeTodolistFilterAC>
 
 type ActionsType =
     | RemoveTodolistActionType
@@ -38,13 +12,7 @@ type ActionsType =
     | ChangeTodolistTitleActionType
     | ChangeTodolistFilterActionType
 
-const listTaskId1 = v1()
-const listTaskId2 = v1()
-
-const initialState: Array<TodolistType> = [
-    { id: listTaskId1, title: 'What to learn', filter: 'active' },
-    { id: listTaskId2, title: 'What to buy', filter: 'completed' },
-]
+const initialState: Array<TodolistType> = []
 
 export const todolistsReducer = (state = initialState, action: ActionsType): TodolistType[] => {
     switch (action.type) {
@@ -57,7 +25,7 @@ export const todolistsReducer = (state = initialState, action: ActionsType): Tod
                 title: action.payload.title,
                 filter: 'all'
             }
-            return [...state, newTodo]
+            return [newTodo, ...state]
         }
         case 'CHANGE-TODOLIST-TITLE': {
             const { id, title } = action.payload
@@ -68,7 +36,7 @@ export const todolistsReducer = (state = initialState, action: ActionsType): Tod
             return [...state.map(tl => tl.id === id ? { ...tl, filter } : tl)]
         }
         default:
-            throw new Error("I don't understand this type")
+            return state
     }
 }
 
@@ -81,32 +49,26 @@ export const removeTodolistAC = (id: string) => {
     } as const
 }
 
-export const addTodolistAC = (id: string, title: string) => {
+export const addTodolistAC = (title: string) => {
     return {
         type: 'ADD-TODOLIST',
         payload: {
             title,
-            id,
+            id: v1()
         },
     } as const
 }
 
-export const changeTodolistTitleAC = (id: string, title: string) => {
+export const changeTodolistTitleAC = (payload: {id: string, title: string}) => {
     return {
         type: 'CHANGE-TODOLIST-TITLE',
-        payload: {
-            id,
-            title,
-        },
+        payload
     } as const
 }
 
-export const changeTodolistFilterAC = (id: string, filter: FilterValuesType ) => {
+export const changeTodolistFilterAC = (payload: {id: string, filter: FilterValuesType}) => {
     return {
         type: 'CHANGE-TODOLIST-FILTER',
-        payload: {
-          id: id,
-          filter,
-        },
+        payload
       } as const
 }

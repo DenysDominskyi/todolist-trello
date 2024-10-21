@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { FilterValuesType } from "./App"
+import { FilterValuesType } from "./app/App"
 import { TodolistHeader } from "./TodolistHeader"
 import { TodolistBody } from "./TodolistBody"
 import { Box } from "@mui/material"

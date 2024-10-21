@@ -4,7 +4,7 @@ import { AddItemForm } from './AddItemForm'
 import { EditableSpan } from './EditableSpan'
 import { Button, Checkbox, IconButton, List, ListItem } from '@mui/material'
 import { Backspace } from '@mui/icons-material'
-import { FilterValuesType } from './App'
+import { FilterValuesType } from './app/App'
 
 type TodolistBodyPropsType = {
     tasks: Array<TaskType>
