@@ -1,6 +1,7 @@
 import { IconButton, TextField} from '@mui/material'
 import { ChangeEvent, KeyboardEvent, useState } from 'react'
 import { AddBox } from '@mui/icons-material'
+import { error } from 'console'
 
 type AddItemFormPropsType = {
     maxTitleLength: number
@@ -31,6 +32,7 @@ export const AddItemForm = ({
         }
     }
     function onNewTitleChangeHandle(e: ChangeEvent<HTMLInputElement>) {
+        if(inputError !== false)
         setInputError(false)
         setTitleInputValue(e.currentTarget.value)
     }
