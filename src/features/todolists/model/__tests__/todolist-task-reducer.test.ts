@@ -1,6 +1,6 @@
-import { TasksStateType, TodolistType } from "../app/App"
-import { tasksReducer } from "./tasks-reducer"
-import { addTodolistAC, removeTodolistAC, todolistsReducer } from "./todolists-reducer"
+import { TasksStateType, TodolistType } from "../../../../app/App"
+import { tasksReducer } from "../tasks-reducer"
+import { addTodolistAC, removeTodolistAC, todolistsReducer } from "../todolists-reducer"
 
 let startState: TasksStateType
 
@@ -31,8 +31,8 @@ test('ids should be equals', () => {
     const idFromTasks = keys[0]
     const idFromTodolists = endTodolistState[0].id
 
-    expect(idFromTasks).toBe(action.payload.id)
-    expect(idFromTodolists).toBe(action.payload.id)
+    expect(idFromTasks).toBe(action.payload.todolistId)
+    expect(idFromTodolists).toBe(action.payload.todolistId)
 })
 
 test('correct tasks array should be deleted', () => {

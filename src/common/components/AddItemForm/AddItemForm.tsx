@@ -5,6 +5,7 @@ import IconButton from "@mui/material/IconButton";
 
 type PropsType = {
 	addItem: (title: string) => void
+	maxTitleLength?: number
 }
 
 export const AddItemForm = ({addItem}: PropsType) => {
