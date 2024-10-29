@@ -1,6 +1,12 @@
-import { SxProps } from "@mui/material";
+import {SxProps} from "@mui/material";
 
-export const todolistSx: SxProps = {
-    padding: '20px',
-    backgroundImage: 'linear-gradient(115deg, rgba(90, 134, 140, 0.08), rgba(157, 226, 227, 0.08), rgba(118, 89, 176, 0.1))',
-}
+export const filterButtonsContainerSx: SxProps = {
+	display: 'flex',
+	justifyContent: 'space-between'
+};
+
+export const getListItemSx = (isDone: boolean): SxProps => ({
+	p: 0,
+	justifyContent: 'space-between',
+	opacity: isDone ? 0.5 : 1
+});

@@ -1,140 +1,162 @@
 import './App.css';
-import { useState } from 'react';
-import { TaskType, Todolist } from '../Todolist';
-import { AddItemForm } from '../AddItemForm';
-import { AppBar, Box, Button, Container, createTheme, CssBaseline, Grid2, IconButton, Paper, Switch, ThemeProvider, Toolbar } from '@mui/material';
-import { Menu } from '@mui/icons-material';
-import { addTodolistAC, changeTodolistFilterAC, changeTodolistTitleAC, removeTodolistAC } from '../model/todolists-reducer';
-import { addTaskAC, changeTaskStatusAC, changeTaskTitleAC, removeTaskAC } from '../model/tasks-reducer';
-import { useAppDispatch, useAppSelector } from './hooks';
+import MenuIcon from '@mui/icons-material/Menu';
+import AppBar from '@mui/material/AppBar';
+import Container from "@mui/material/Container";
+import CssBaseline from "@mui/material/CssBaseline";
+import IconButton from '@mui/material/IconButton';
+import Paper from '@mui/material/Paper';
+import {createTheme, ThemeProvider} from '@mui/material/styles';
+import Switch from '@mui/material/Switch';
+import Toolbar from '@mui/material/Toolbar';
+import Grid from '@mui/material/Unstable_Grid2';
+import React, {useState} from "react";
+import {useDispatch, useSelector} from "react-redux";
+import {AddItemForm} from "../AddItemForm";
+import {RootState} from "./store";
+import {MenuButton} from "../MenuButton";
+import {addTaskAC, changeTaskStatusAC, changeTaskTitleAC, removeTaskAC} from "../model/tasks-reducer";
+import {
+	addTodolistAC,
+	changeTodolistFilterAC,
+	changeTodolistTitleAC,
+	removeTodolistAC
+} from "../model/todolists-reducer";
+import {Todolist} from "../Todolist";
+
+export type TaskType = {
+	id: string
+	title: string
+	isDone: boolean
+}
 
 export type FilterValuesType = 'all' | 'active' | 'completed'
 
 export type TodolistType = {
-    id: string
-    title: string
-    filter: FilterValuesType
+	id: string
+	title: string
+	filter: FilterValuesType
 }
 
 export type TasksStateType = {
-    [id: string]: Array<TaskType>
+	[key: string]: TaskType[]
 }
 
-export function App() {
-    // lessonBranch
+type ThemeMode = 'dark' | 'light'
 
-    // BLL
-    const [isLightMode, setIsLightMode] = useState(true)
-    
-    const todoLists = useAppSelector(state => state.todolists)
-    const tasks = useAppSelector(state => state.tasks)
+function App() {
 
-    const dispatch = useAppDispatch()
+	const todolists = useSelector<RootState, TodolistType[]>((state)=> state.todolists)
+	const tasks = useSelector<RootState, TasksStateType>((state)=> state.tasks)
 
-    // todolist functions
-    const addTodolist = (title: string) => {
-        dispatch(addTodolistAC(title))
-    }
-    const removeTodolist = (todolistId: string) => {
-        dispatch(removeTodolistAC(todolistId))
-    }
-    const changeTodolistFilter = (value: FilterValuesType, todolistId: string) => {
-        dispatch(changeTodolistFilterAC({ id: todolistId, filter: value }))
-    }
-    const changeTodolistTitle = (newTitle: string, todolistId: string) => {
-        dispatch(changeTodolistTitleAC({ id: todolistId, title: newTitle }))
-    }
+	const dispatch = useDispatch()
 
-    // tasks functions
-    function addTask(title: string, todolistId: string) {
-        dispatch(addTaskAC({ id: todolistId, title }))
-    }
-    function removeTask(id: string, todolistId: string) {
-        dispatch(removeTaskAC({ todolistId, taskId: id }))
-    }
-    function changeTaskStatus(taskId: string, newStatus: boolean, todolistId: string) {
-        dispatch(changeTaskStatusAC({ todolistId, taskId, status: newStatus }))
-    }
-    function changeTaskTitle(taskId: string, newTitle: string, todolistId: string) {
-        dispatch(changeTaskTitleAC({ todolistId, taskId, title: newTitle }))
-    }
+	const [themeMode, setThemeMode] = useState<ThemeMode>('light')
 
-    const TodolistComponents: Array<JSX.Element> = todoLists.map((tl) => {
-        let filteredTasks = tasks[tl.id]
-        if (tl.filter === 'active') {
-            filteredTasks = filteredTasks.filter(t => t.isDone === false)
-        }
-        if (tl.filter === 'completed') {
-            filteredTasks = filteredTasks.filter(t => t.isDone === true)
-        }
+	const theme = createTheme({
+		palette: {
+			mode: themeMode === 'light' ? 'light' : 'dark',
+			primary: {
+				main: '#087EA4',
+			},
+		},
+	});
 
-        return (
-            <Grid2 key={tl.id}>
-                <Paper sx={{ display: 'flex' }} elevation={3}>
-                    <Todolist
-                        todolistId={tl.id}
-                        title={tl.title}
-                        filter={tl.filter}
-                        tasks={filteredTasks}
-                        addTask={addTask}
-                        removeTask={removeTask}
-                        changeTaskStatus={changeTaskStatus}
-                        changeTaskTitle={changeTaskTitle}
-                        changeTodolistFilter={changeTodolistFilter}
-                        removeTodolist={removeTodolist}
-                        changeTodolistTitle={changeTodolistTitle}
-                    />
-                </Paper>
-            </Grid2>
-        )
-    })
+	const removeTask = (taskId: string, todolistId: string) => {
+		dispatch(removeTaskAC({taskId, todolistId}))
+	}
 
-    // MUI customization
-    const theme = createTheme({
-        palette: {
-            primary: {
-                main: '#E0C2FF',
-                light: '#F5EBFF',
-                contrastText: '#47008F',
-            },
-            secondary: {
-                main: '#FF5733',
-            },
-            mode: isLightMode ? 'light' : 'dark'
-        },
-    });
+	const addTask = (title: string, todolistId: string) => {
+		dispatch(addTaskAC({title, todolistId}))
+	}
 
-    // UI
-    return (
-        <ThemeProvider theme={theme}>
-            <CssBaseline />
-            <div className="App">
-                <AppBar position='static' color='secondary'>
-                    <Toolbar sx={{ justifyContent: 'space-between' }}>
-                        <IconButton color='inherit'>
-                            <Menu />
-                        </IconButton>
-                        <Box>
-                            <Switch onChange={() => setIsLightMode(!isLightMode)} />
-                            <Button color='inherit'>Login</Button>
-                        </Box>
-                    </Toolbar>
-                </AppBar>
-                <Container fixed>
-                    <Grid2
-                        container
-                        sx={{ mt: '15px' }}
-                    >
-                        <AddItemForm
-                            addItem={addTodolist}
-                            maxTitleLength={12}
-                        />
-                    </Grid2>
-                    <Grid2 container spacing={2}>
-                        {TodolistComponents}
-                    </Grid2>
-                </Container>
-            </div>
-        </ThemeProvider>
-    );
+	const changeTaskStatus = (taskId: string, taskStatus: boolean, todolistId: string) => {
+		dispatch(changeTaskStatusAC({taskId, isDone: taskStatus, todolistId}))
+	}
+
+	const updateTask = (todolistId: string, taskId: string, title: string) => {
+		dispatch(changeTaskTitleAC({taskId, title, todolistId}))
+	}
+
+	const changeFilter = (filter: FilterValuesType, id: string) => {
+		dispatch(changeTodolistFilterAC({id, filter}))
+	}
+
+	const removeTodolist = (todolistId: string) => {
+		dispatch(removeTodolistAC(todolistId))
+	}
+
+	const addTodolist = (title: string) => {
+		dispatch(addTodolistAC(title))
+	}
+
+	const updateTodolist = (id: string, title: string) => {
+		dispatch(changeTodolistTitleAC({id, title}))
+	}
+
+	const changeModeHandler = () => {
+		setThemeMode(themeMode === "light" ? "dark" : 'light')
+	}
+
+	return (
+		<ThemeProvider theme={theme}>
+			<CssBaseline/>
+			<AppBar position="static" sx={{mb: '30px'}}>
+				<Toolbar sx={{display: 'flex', justifyContent: 'space-between'}}>
+					<IconButton color="inherit">
+						<MenuIcon/>
+					</IconButton>
+					<div>
+						<MenuButton>Login</MenuButton>
+						<MenuButton>Logout</MenuButton>
+						<MenuButton background={theme.palette.primary.dark}>Faq</MenuButton>
+						<Switch color={'default'} onChange={changeModeHandler}/>
+					</div>
+				</Toolbar>
+			</AppBar>
+			<Container fixed>
+				<Grid container sx={{mb: '30px'}}>
+					<AddItemForm addItem={addTodolist}/>
+				</Grid>
+
+				<Grid container spacing={4}>
+					{todolists.map((tl) => {
+
+						const allTodolistTasks = tasks[tl.id]
+						let tasksForTodolist = allTodolistTasks
+
+						if (tl.filter === 'active') {
+							tasksForTodolist = allTodolistTasks.filter(task => !task.isDone)
+						}
+
+						if (tl.filter === 'completed') {
+							tasksForTodolist = allTodolistTasks.filter(task => task.isDone)
+						}
+
+						return (
+							<Grid key={tl.id}>
+								<Paper sx={{p: '0 20px 20px 20px'}}>
+									<Todolist
+										key={tl.id}
+										todolistId={tl.id}
+										title={tl.title}
+										tasks={tasksForTodolist}
+										removeTask={removeTask}
+										changeFilter={changeFilter}
+										addTask={addTask}
+										changeTaskStatus={changeTaskStatus}
+										filter={tl.filter}
+										removeTodolist={removeTodolist}
+										updateTask={updateTask}
+										updateTodolist={updateTodolist}
+									/>
+								</Paper>
+							</Grid>
+						)
+					})}
+				</Grid>
+			</Container>
+		</ThemeProvider>
+	);
 }
+
+export default App;
