@@ -1,31 +1,31 @@
-import { Grid2, Paper } from "@mui/material"
+import Paper from "@mui/material/Paper"
+import Grid from "@mui/material/Unstable_Grid2"
+import React, { useEffect } from "react"
+import { useAppDispatch, useAppSelector } from "common/hooks"
+import { selectTodolists } from "../../model/todolistsSelectors"
 import { Todolist } from "./Todolist/Todolist"
-import { useAppSelector } from "../../../../common/hooks/useAppSelector"
-import { useAppDispatch } from "../../../../common/hooks/useAppDispatch"
-import { addTaskAC } from "../../model/tasks-reducer"
-import { selectTodolists } from "../../../../app/appSelectors"
+import { fetchTodolistsTC } from "features/todolists/model/todolists-reducer"
 
 export const Todolists = () => {
-    const todolists = useAppSelector(selectTodolists)
+  const todolists = useAppSelector(selectTodolists)
 
-    const dispatch = useAppDispatch()
+  const dispatch = useAppDispatch()
 
-    const addTask = (title: string, todolistId: string) => {
-        dispatch(addTaskAC({ title, todolistId }))
-    }
+  useEffect(()=>{
+      dispatch(fetchTodolistsTC())
+  }, [])
 
-    return (
-        <>
-            {todolists.map((tl) => {
-
-                return (
-                    <Grid2 key={tl.id}>
-                        <Paper sx={{ p: '0 20px 20px 20px' }}>
-                            <Todolist todolist={tl} addTask={addTask} />
-                        </Paper>
-                    </Grid2>
-                )
-            })}
-        </>
-    )
+  return (
+    <>
+      {todolists.map((tl) => {
+        return (
+          <Grid key={tl.id}>
+            <Paper sx={{ p: "0 20px 20px 20px" }}>
+              <Todolist key={tl.id} todolist={tl} />
+            </Paper>
+          </Grid>
+        )
+      })}
+    </>
+  )
 }

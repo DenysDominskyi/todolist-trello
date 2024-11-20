@@ -1,31 +1,34 @@
-import { EditableSpan } from '../../../../../../common/components/EditableSpan/EditableSpan'
-import { IconButton } from '@mui/material'
-import DeleteIcon from '@mui/icons-material/Delete';
-import { changeTodolistTitleAC, removeTodolistAC } from '../../../../model/todolists-reducer';
-import { useAppDispatch } from "../../../../../../common/hooks/useAppDispatch";
-import { TodolistType } from '../../../../../../app/App';
-import styles from './TodolistTitle.module.css'
+import DeleteIcon from "@mui/icons-material/Delete"
+import IconButton from "@mui/material/IconButton"
+import { EditableSpan } from "common/components"
+import { useAppDispatch } from "common/hooks"
+import { changeTodolistTitleAC, removeTodolistAC, TodolistType } from "../../../../model/todolists-reducer"
+import s from "./TodolistTitle.module.css"
 
 type Props = {
-    todolist: TodolistType
+  todolist: TodolistType
 }
 
-export const TodolistTitle = ({todolist}: Props) => {
-    const dispatch = useAppDispatch()
+export const TodolistTitle = ({ todolist }: Props) => {
+  const { title, id } = todolist
 
-    const removeTodolist = () => {
-        dispatch(removeTodolistAC(todolist.id))
-    }
-    
-    const updateTodolist = (title: string) => {
-        dispatch(changeTodolistTitleAC({ id: todolist.id, title }))
-    }
-    return (
-        <div className={styles.container}>
-            <h3><EditableSpan title={todolist.title} changeItemTitle={updateTodolist} /></h3>
-            <IconButton onClick={removeTodolist}>
-                <DeleteIcon />
-            </IconButton>
-        </div>
-    )
+  const dispatch = useAppDispatch()
+
+  const removeTodolistHandler = () => {
+    dispatch(removeTodolistAC(id))
+  }
+  const updateTodolistHandler = (title: string) => {
+    dispatch(changeTodolistTitleAC({ id, title }))
+  }
+
+  return (
+    <div className={s.container}>
+      <h3>
+        <EditableSpan value={title} onChange={updateTodolistHandler} />
+      </h3>
+      <IconButton onClick={removeTodolistHandler}>
+        <DeleteIcon />
+      </IconButton>
+    </div>
+  )
 }
