@@ -21,12 +21,14 @@ export const TodolistTitle = ({ todolist }: Props) => {
     dispatch(updateTodolistTitleTC({ id, title }))
   }
 
+  let isDisabled = entityStatus === 'loading'
+
   return (
     <div className={s.container}>
       <h3>
-        <EditableSpan value={title} onChange={updateTodolistHandler} />
+        <EditableSpan value={title} onChange={updateTodolistHandler} disabled={isDisabled}/>
       </h3>
-      <IconButton onClick={removeTodolistHandler} disabled={entityStatus === 'loading'}>
+      <IconButton onClick={removeTodolistHandler} disabled={isDisabled}>
         <DeleteIcon />
       </IconButton>
     </div>

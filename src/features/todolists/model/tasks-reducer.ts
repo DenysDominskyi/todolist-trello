@@ -113,8 +113,20 @@ export const fetchTasksTC =
 export const removeTaskTC =
   (args: { taskId: string; todolistId: string }): AppThunk =>
   (dispatch: AppDispatch) => {
-    tasksApi.deleteTask(args).then(() => {
-      dispatch(removeTaskAC(args))
+    dispatch(setAppStatusAC("loading"))
+    tasksApi
+    .deleteTask(args)
+    .then((res) => {
+      if (res.data.resultCode === ResultCode.success) {
+        dispatch(setAppStatusAC("succeeded"))
+        dispatch(removeTaskAC(args))
+      } else {
+        handleServerAppError(res.data, dispatch)
+      }
+      
+    })
+    .catch((err)=>{
+      handleServerNetworkError(err, dispatch)
     })
   }
 

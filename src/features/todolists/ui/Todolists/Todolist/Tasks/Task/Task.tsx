@@ -32,13 +32,15 @@ export const Task = ({ task, todolist }: Props) => {
     dispatch(updateTaskTC({ ...task, title}))
   }
 
+  let isDisabled = todolist.entityStatus === 'loading'
+
   return (
     <ListItem key={task.id} sx={getListItemSx(task.status === TaskStatus.Completed)}>
       <div>
-        <Checkbox checked={task.status === TaskStatus.Completed} onChange={changeTaskStatusHandler} />
-        <EditableSpan value={task.title} onChange={changeTaskTitleHandler} />
+        <Checkbox checked={task.status === TaskStatus.Completed} onChange={changeTaskStatusHandler} disabled={isDisabled}/>
+        <EditableSpan value={task.title} onChange={changeTaskTitleHandler} disabled={isDisabled}/>
       </div>
-      <IconButton onClick={removeTaskHandler}>
+      <IconButton onClick={removeTaskHandler} disabled={isDisabled}>
         <DeleteIcon />
       </IconButton>
     </ListItem>
