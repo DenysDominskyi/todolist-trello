@@ -8,7 +8,7 @@ import Grid from "@mui/material/Grid"
 import TextField from "@mui/material/TextField"
 import { useAppDispatch, useAppSelector } from "common/hooks"
 import { getTheme } from "common/theme"
-import { selectThemeMode } from "../../../../app/appSelectors"
+import { selectThemeMode } from "../../../../app/appSlice"
 import { Controller, SubmitHandler, useForm } from "react-hook-form"
 import s from "./Login.module.css"
 import { loginTC } from "features/auth/model/authSlice"
@@ -34,9 +34,7 @@ export const Login = () => {
   const {
     register,
     handleSubmit,
-    reset,
     control,
-    watch,
     formState: { errors },
   } = useForm<Inputs>({ defaultValues: { email: "", password: "", rememberMe: false } })
 

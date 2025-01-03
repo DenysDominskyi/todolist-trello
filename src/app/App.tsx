@@ -3,13 +3,13 @@ import { ThemeProvider } from "@mui/material/styles"
 import { Header, ErrorSnackbar } from "common/components"
 import { useAppDispatch, useAppSelector } from "common/hooks"
 import { getTheme } from "common/theme"
-import { selectThemeMode } from "./appSelectors"
 import { RoutingApp } from "common/routing"
 import { useEffect } from "react"
 import { initializeAppTC } from "features/auth/model/authSlice"
 import { selectIsInitialized } from "features/auth/model/authSelector"
 import { CircularProgress } from "@mui/material"
 import s from './App.module.css'
+import { selectThemeMode } from "./appSlice"
 
 export const App = () => {
   const themeMode = useAppSelector(selectThemeMode)

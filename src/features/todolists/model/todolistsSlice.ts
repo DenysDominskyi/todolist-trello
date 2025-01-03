@@ -5,7 +5,7 @@ import { Dispatch } from "redux"
 import { RequestStatus, setAppStatus } from "../../../app/appSlice"
 import { todolistsApi } from "../api/todolistsApi"
 import { Todolist } from "../api/todolistsApi.types"
-import { fetchTasksTC } from "./tasks-reducer"
+import { fetchTasksTC } from "./tasksSlice"
 import { createSlice } from "@reduxjs/toolkit"
 
 export type FilterValuesType = "all" | "active" | "completed"
@@ -16,7 +16,7 @@ export type DomainTodolist = Todolist & {
 }
 
 export const todolistSlice = createSlice({
-  name: "todolist",
+  name: "todolists",
   initialState: [] as DomainTodolist[],
   reducers: (create) => ({
     setTodolists: create.reducer<{ todolists: Todolist[] }>((state, action) => {
@@ -63,6 +63,9 @@ export const todolistSlice = createSlice({
       return []
     }),
   }),
+  selectors: {
+    selectTodolists: (state) => state
+  }
 })
 
 export const {
@@ -74,6 +77,8 @@ export const {
   changeTodolistEntityStatus,
   clearTodosData,
 } = todolistSlice.actions
+
+export const {selectTodolists} = todolistSlice.selectors
 
 export const todolistsReducer = todolistSlice.reducer
 

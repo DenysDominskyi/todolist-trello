@@ -1,4 +1,4 @@
-import { Routes, Route, RouteObject } from "react-router"
+import { Routes, Route } from "react-router"
 
 import { Main } from "app/Main"
 import { Login } from "features/auth/ui/Login/Login"
