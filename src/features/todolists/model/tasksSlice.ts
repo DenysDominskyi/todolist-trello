@@ -8,6 +8,7 @@ import { tasksApi } from "../api/tasksApi"
 import { DomainTask, UpdateTaskDomainModel, UpdateTaskModel } from "../api/tasksApi.types"
 import { createSlice } from "@reduxjs/toolkit"
 import { addTodolist, removeTodolist } from "./todolistsSlice"
+import { clearTasksAndTodolists } from "common/actions/common.actions"
 
 export type TasksStateType = {
   [key: string]: DomainTask[]
@@ -40,9 +41,6 @@ export const tasksSlise = createSlice({
         }
       },
     ),
-    clearTasks: create.reducer<undefined>(() => {
-      return {}
-    })
   }),
   extraReducers: (builder) => {
     builder
@@ -52,10 +50,13 @@ export const tasksSlise = createSlice({
       .addCase(removeTodolist, (state, action) => {
         delete state[action.payload.id]
       })
+      .addCase(clearTasksAndTodolists, () => {
+        return {}
+      })
   },
 })
 
-export const {setTasks, removeTask, addTask, updateTask, clearTasks} = tasksSlise.actions
+export const {setTasks, removeTask, addTask, updateTask} = tasksSlise.actions
 
 export const tasksReducer = tasksSlise.reducer
 
