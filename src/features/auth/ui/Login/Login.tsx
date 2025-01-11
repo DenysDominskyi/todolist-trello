@@ -8,45 +8,51 @@ import Grid from "@mui/material/Grid"
 import TextField from "@mui/material/TextField"
 import { useAppDispatch, useAppSelector } from "common/hooks"
 import { getTheme } from "common/theme"
-import { selectThemeMode } from "../../../../app/appSlice"
 import { Controller, SubmitHandler, useForm } from "react-hook-form"
+import { Navigate } from "react-router-dom"
+import { selectIsLoggedIn, selectThemeMode, setIsLoggedIn } from "../../../../app/appSlice"
 import s from "./Login.module.css"
-import { loginTC } from "features/auth/model/authSlice"
-import { selectIsLoggedIn } from "features/auth/model/authSelector"
-import { useNavigate } from "react-router"
-import { Path } from "common/routing/RoutingApp"
-import { useEffect } from "react"
+import { useLoginMutation } from "features/auth/api/authAPI"
+import { LoginArgs } from "features/auth/api/authAPI.types"
+import { ResultCode } from "common/enums"
 
-export type Inputs = {
+type Inputs = {
   email: string
   password: string
   rememberMe: boolean
 }
 
 export const Login = () => {
-  const dispatch = useAppDispatch()
   const themeMode = useAppSelector(selectThemeMode)
-  const theme = getTheme(themeMode)
   const isLoggedIn = useAppSelector(selectIsLoggedIn)
+  const theme = getTheme(themeMode)
+  const dispatch = useAppDispatch()
 
-  const navigate = useNavigate()
+  const [login] = useLoginMutation()
 
   const {
     register,
     handleSubmit,
+    reset,
     control,
     formState: { errors },
   } = useForm<Inputs>({ defaultValues: { email: "", password: "", rememberMe: false } })
 
-  useEffect(() => {
-    if (isLoggedIn) {
-      navigate(Path.Main)
-    }
-  }, [isLoggedIn])
+  const onSubmit: SubmitHandler<LoginArgs> = (data) => {
+    login(data)
+    .then(res => {
+      if (res.data?.resultCode === ResultCode.Success) {
+        dispatch(setIsLoggedIn({ isLoggedIn: true }))
+        localStorage.setItem('sn-token', res.data.data.token)
+      }
+    })
+    .finally(() => {
+      reset()
+    })
+  }
 
-  const onSubmit: SubmitHandler<Inputs> = (data) => {
-    dispatch(loginTC(data))
-    // reset()
+  if (isLoggedIn) {
+    return <Navigate to={"/"} />
   }
 
   return (
@@ -96,23 +102,21 @@ export const Login = () => {
                   minLength: {
                     value: 3,
                     message: "Password must be at least 3 characters long",
-                  }
+                  },
                 })}
               />
-              {errors.password && <span className={s.errorMessage}>"Password must be at least 3 characters long"</span>}
+              {errors.password && <span className={s.errorMessage}>{errors.password.message}</span>}
+
               <FormControlLabel
                 label={"Remember me"}
                 control={
                   <Controller
                     name={"rememberMe"}
                     control={control}
-                    render={({ field: { onChange, value } }) => (
-                      <Checkbox onChange={(e) => onChange(e.target.checked)} checked={value} />
-                    )}
+                    render={({ field: { value, ...field } }) => <Checkbox {...field} checked={value} />}
                   />
                 }
               />
-
               <Button type={"submit"} variant={"contained"} color={"primary"}>
                 Login
               </Button>

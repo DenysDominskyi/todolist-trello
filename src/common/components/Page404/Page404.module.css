@@ -1,19 +1,12 @@
 .title {
-    text-align: center;
-    font-size: 250px;
-    margin: 0;
-  }
-   
-  .subTitle {
-    text-align: center;
-    font-size: 50px;
-    margin: 0;
-    text-transform: uppercase;
-  }
+  text-align: center;
+  font-size: 250px;
+  margin: 0;
+}
 
-  .buttonContainer {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    margin: 30px 0;
-  }
+.subTitle {
+  text-align: center;
+  font-size: 50px;
+  margin: 0;
+  text-transform: uppercase;
+}

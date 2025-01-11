@@ -1,20 +1,17 @@
+import { createSlice } from "@reduxjs/toolkit"
 import { ResultCode } from "common/enums"
-import { handleServerAppError } from "common/utils/handleServerAppError"
-import { handleServerNetworkError } from "common/utils/handleServerNetworkError"
+import { handleServerAppError, handleServerNetworkError } from "common/utils"
 import { Dispatch } from "redux"
 import { setAppStatus } from "../../../app/appSlice"
 import { RootState } from "../../../app/store"
 import { tasksApi } from "../api/tasksApi"
 import { DomainTask, UpdateTaskDomainModel, UpdateTaskModel } from "../api/tasksApi.types"
-import { createSlice } from "@reduxjs/toolkit"
-import { addTodolist, removeTodolist } from "./todolistsSlice"
-import { clearTasksAndTodolists } from "common/actions/common.actions"
 
 export type TasksStateType = {
   [key: string]: DomainTask[]
 }
 
-export const tasksSlise = createSlice({
+export const tasksSlice = createSlice({
   name: "tasks",
   initialState: {} as TasksStateType,
   reducers: (create) => ({
@@ -23,7 +20,7 @@ export const tasksSlise = createSlice({
     }),
     removeTask: create.reducer<{ taskId: string; todolistId: string }>((state, action) => {
       const tasks = state[action.payload.todolistId]
-      const index = tasks.findIndex((task) => task.id === action.payload.taskId)
+      const index = tasks.findIndex((t) => t.id === action.payload.taskId)
       if (index !== -1) {
         tasks.splice(index, 1)
       }
@@ -35,30 +32,26 @@ export const tasksSlise = createSlice({
     updateTask: create.reducer<{ taskId: string; todolistId: string; domainModel: UpdateTaskDomainModel }>(
       (state, action) => {
         const tasks = state[action.payload.todolistId]
-        const index = tasks.findIndex((task) => task.id === action.payload.taskId)
+        const index = tasks.findIndex((t) => t.id === action.payload.taskId)
         if (index !== -1) {
           tasks[index] = { ...tasks[index], ...action.payload.domainModel }
         }
       },
-    ),
+    )
   }),
-  extraReducers: (builder) => {
-    builder
-      .addCase(addTodolist, (state, action) => {
-        state[action.payload.todolist.id] = []
-      })
-      .addCase(removeTodolist, (state, action) => {
-        delete state[action.payload.id]
-      })
-      .addCase(clearTasksAndTodolists, () => {
-        return {}
-      })
+  // extraReducers: (builder) => {
+  //   builder
+  //     .addCase(addTodolist, (state, action) => {
+  //       state[action.payload.todolist.id] = []
+  //     })
+  //     .addCase(removeTodolist, (state, action) => {
+  //       delete state[action.payload.id]
+  //     })
+  // },
+  selectors: {
+    selectTasks: (state) => state,
   },
 })
-
-export const {setTasks, removeTask, addTask, updateTask} = tasksSlise.actions
-
-export const tasksReducer = tasksSlise.reducer
 
 // Thunks
 export const fetchTasksTC = (todolistId: string) => (dispatch: Dispatch) => {
@@ -144,3 +137,7 @@ export const updateTaskTC =
         })
     }
   }
+
+export const { setTasks, removeTask, addTask, updateTask } = tasksSlice.actions
+export const { selectTasks } = tasksSlice.selectors
+export const tasksReducer = tasksSlice.reducer

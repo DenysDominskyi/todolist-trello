@@ -13,7 +13,7 @@ test("ids should be equals", () => {
     order: 0,
   }
 
-  const action = addTodolist({todolist})
+  const action = addTodolist({ todolist })
 
   const endTasksState = tasksReducer(startTasksState, action)
   const endTodolistsState = todolistsReducer(startTodolistsState, action)
