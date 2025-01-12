@@ -1,7 +1,6 @@
 import { instance } from "common/instance"
 import { BaseResponse } from "common/types"
 import { Todolist } from "./todolistsApi.types"
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react"
 import { DomainTodolist } from "../model/todolistsSlice"
 import { baseApi } from "baseApi"
 
@@ -15,7 +14,7 @@ export const todolistsApi = baseApi.injectEndpoints({
       transformResponse(todolists: Todolist[]): DomainTodolist[] {
         return todolists.map((tl) => ({ ...tl, filter: "all", entityStatus: "idle" }))
       },
-      providesTags: ['Todolist']
+      providesTags: ["Todolist"],
     }),
     createTodolist: builder.mutation<BaseResponse<{ item: Todolist }>, string>({
       query: (title: any) => ({
@@ -23,14 +22,14 @@ export const todolistsApi = baseApi.injectEndpoints({
         url: "todo-lists",
         body: { title },
       }),
-      invalidatesTags: ['Todolist'],
+      invalidatesTags: ["Todolist"],
     }),
     deleteTodolist: builder.mutation<BaseResponse, string>({
       query: (id: string) => ({
         method: "DELETE",
         url: `todo-lists/${id}`,
       }),
-      invalidatesTags: ['Todolist'],
+      invalidatesTags: ["Todolist"],
     }),
     updateTodolistTitle: builder.mutation<BaseResponse, { id: string; title: string }>({
       query: ({ id, title }) => ({
@@ -38,17 +37,19 @@ export const todolistsApi = baseApi.injectEndpoints({
         url: `todo-lists/${id}`,
         body: { title },
       }),
-      invalidatesTags: ['Todolist'],
+      invalidatesTags: ["Todolist"],
     }),
   }),
 })
 
-export const { useGetTodolistsQuery, useCreateTodolistMutation, useDeleteTodolistMutation, useUpdateTodolistTitleMutation } =
-  todolistsApi
+export const {
+  useGetTodolistsQuery,
+  useCreateTodolistMutation,
+  useDeleteTodolistMutation,
+  useUpdateTodolistTitleMutation,
+} = todolistsApi
 
-
-
-//DONT USE
+//NOT USED
 export const _todolistsApi = {
   //DONE
   getTodolists() {

@@ -5,7 +5,7 @@ import { ErrorSnackbar, Header } from "common/components"
 import { useAppDispatch, useAppSelector } from "common/hooks"
 import { getTheme } from "common/theme"
 import { useEffect, useState } from "react"
-import { Outlet } from "react-router-dom"
+import { Outlet } from "react-router"
 
 import CircularProgress from "@mui/material/CircularProgress"
 import { selectThemeMode, setIsLoggedIn } from "./appSlice"

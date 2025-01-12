@@ -2,7 +2,7 @@ import { router } from "common/router"
 import ReactDOM from "react-dom/client"
 import "./index.css"
 import { Provider } from "react-redux"
-import { RouterProvider } from "react-router-dom"
+import { RouterProvider } from "react-router"
 import { store } from "./app/store"
 
 const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement)

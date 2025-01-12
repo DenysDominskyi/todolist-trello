@@ -33,7 +33,6 @@ export const TodolistTitle = ({ todolist }: Props) => {
     deleteTodolist(id)
   }
   const updateTodolistHandler = (title: string) => {
-    debugger
     updateTodolistTitle({ id, title })
   }
 

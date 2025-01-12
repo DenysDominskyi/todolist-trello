@@ -4,8 +4,8 @@ import { handleServerAppError, handleServerNetworkError } from "common/utils"
 import { Dispatch } from "redux"
 import { setAppStatus } from "../../../app/appSlice"
 import { RootState } from "../../../app/store"
-import { tasksApi } from "../api/tasksApi"
 import { DomainTask, UpdateTaskDomainModel, UpdateTaskModel } from "../api/tasksApi.types"
+import { _tasksApi } from "../api/tasksApi"
 
 export type TasksStateType = {
   [key: string]: DomainTask[]
@@ -39,15 +39,6 @@ export const tasksSlice = createSlice({
       },
     )
   }),
-  // extraReducers: (builder) => {
-  //   builder
-  //     .addCase(addTodolist, (state, action) => {
-  //       state[action.payload.todolist.id] = []
-  //     })
-  //     .addCase(removeTodolist, (state, action) => {
-  //       delete state[action.payload.id]
-  //     })
-  // },
   selectors: {
     selectTasks: (state) => state,
   },
@@ -56,7 +47,7 @@ export const tasksSlice = createSlice({
 // Thunks
 export const fetchTasksTC = (todolistId: string) => (dispatch: Dispatch) => {
   dispatch(setAppStatus({ status: "loading" }))
-  tasksApi
+  _tasksApi
     .getTasks(todolistId)
     .then((res) => {
       dispatch(setAppStatus({ status: "succeeded" }))
@@ -69,7 +60,7 @@ export const fetchTasksTC = (todolistId: string) => (dispatch: Dispatch) => {
 
 export const removeTaskTC = (arg: { taskId: string; todolistId: string }) => (dispatch: Dispatch) => {
   dispatch(setAppStatus({ status: "loading" }))
-  tasksApi
+  _tasksApi
     .deleteTask(arg)
     .then((res) => {
       if (res.data.resultCode === ResultCode.Success) {
@@ -86,7 +77,7 @@ export const removeTaskTC = (arg: { taskId: string; todolistId: string }) => (di
 
 export const addTaskTC = (arg: { title: string; todolistId: string }) => (dispatch: Dispatch) => {
   dispatch(setAppStatus({ status: "loading" }))
-  tasksApi
+  _tasksApi
     .createTask(arg)
     .then((res) => {
       if (res.data.resultCode === ResultCode.Success) {
@@ -122,7 +113,7 @@ export const updateTaskTC =
       }
 
       dispatch(setAppStatus({ status: "loading" }))
-      tasksApi
+      _tasksApi
         .updateTask({ taskId, todolistId, model })
         .then((res) => {
           if (res.data.resultCode === ResultCode.Success) {
