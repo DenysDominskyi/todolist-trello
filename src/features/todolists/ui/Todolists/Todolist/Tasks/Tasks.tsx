@@ -1,26 +1,21 @@
 import List from "@mui/material/List"
-import { useEffect } from "react"
 import { TaskStatus } from "common/enums"
-import { useAppDispatch, useAppSelector } from "common/hooks"
-// import { fetchTasksTC, selectTasks } from "../../../../model/tasksSlice"
 import { DomainTodolist } from "../../../../model/todolistsSlice"
 import { Task } from "./Task/Task"
 import { useGetTasksQuery } from "features/todolists/api/tasksApi"
+import { TasksSkeleton } from "features/todolists/ui/skeletons/TaskSeleton/TasksSkeleton"
+import { TasksPaginations } from "../TasksPagination/TasksPaginations"
+import { useState } from "react"
 
 type Props = {
   todolist: DomainTodolist
 }
 
 export const Tasks = ({ todolist }: Props) => {
-  // const tasks = useAppSelector(selectTasks)
-  const {data} = useGetTasksQuery(todolist.id)
 
-  const dispatch = useAppDispatch()
+  const [page, setPage] = useState(1)
 
-  // useEffect(() => {
-  //   dispatch(fetchTasksTC(todolist.id))
-  // }, [])
-
+  const { data, isLoading } = useGetTasksQuery({ todolistId: todolist.id, args: { page } })
   let tasksForTodolist = data?.items
 
   if (todolist.filter === "active") {
@@ -31,16 +26,23 @@ export const Tasks = ({ todolist }: Props) => {
     tasksForTodolist = tasksForTodolist?.filter((task) => task.status === TaskStatus.Completed)
   }
 
+  if (isLoading) {
+    return <TasksSkeleton />
+  }
+
   return (
     <>
       {tasksForTodolist?.length === 0 ? (
         <p>Тасок нет</p>
       ) : (
-        <List>
-          {tasksForTodolist?.map((task) => {
-            return <Task key={task.id} task={task} todolist={todolist} />
-          })}
-        </List>
+        <>
+          <List>
+            {tasksForTodolist?.map((task) => {
+              return <Task key={task.id} task={task} todolist={todolist} />
+            })}
+          </List>
+          {(data?.totalCount || 0) >= 10 && <TasksPaginations totalCount={data?.totalCount || 0} page={page} setPage={setPage} />}
+        </>
       )}
     </>
   )
