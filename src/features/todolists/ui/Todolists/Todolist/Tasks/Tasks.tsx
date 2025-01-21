@@ -6,6 +6,7 @@ import { useGetTasksQuery } from "features/todolists/api/tasksApi"
 import { TasksSkeleton } from "features/todolists/ui/skeletons/TaskSeleton/TasksSkeleton"
 import { TasksPaginations } from "../TasksPagination/TasksPaginations"
 import { useState } from "react"
+import { useTasks } from "../../lib/hooks/useTasks"
 
 type Props = {
   todolist: DomainTodolist
@@ -13,18 +14,7 @@ type Props = {
 
 export const Tasks = ({ todolist }: Props) => {
 
-  const [page, setPage] = useState(1)
-
-  const { data, isLoading } = useGetTasksQuery({ todolistId: todolist.id, args: { page } })
-  let tasksForTodolist = data?.items
-
-  if (todolist.filter === "active") {
-    tasksForTodolist = tasksForTodolist?.filter((task) => task.status === TaskStatus.New)
-  }
-
-  if (todolist.filter === "completed") {
-    tasksForTodolist = tasksForTodolist?.filter((task) => task.status === TaskStatus.Completed)
-  }
+  const { tasks, isLoading, totalCount, page, setPage } = useTasks(todolist)
 
   if (isLoading) {
     return <TasksSkeleton />
@@ -32,16 +22,16 @@ export const Tasks = ({ todolist }: Props) => {
 
   return (
     <>
-      {tasksForTodolist?.length === 0 ? (
+      {tasks?.length === 0 ? (
         <p>Тасок нет</p>
       ) : (
         <>
           <List>
-            {tasksForTodolist?.map((task) => {
+            {tasks?.map((task) => {
               return <Task key={task.id} task={task} todolist={todolist} />
             })}
           </List>
-          {(data?.totalCount || 0) >= 10 && <TasksPaginations totalCount={data?.totalCount || 0} page={page} setPage={setPage} />}
+          {(totalCount || 0) > 4 && <TasksPaginations totalCount={totalCount || 0} page={page} setPage={setPage} />}
         </>
       )}
     </>
