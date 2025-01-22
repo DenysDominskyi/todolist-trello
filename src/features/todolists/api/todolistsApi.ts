@@ -1,8 +1,13 @@
-import { instance } from "common/instance"
 import { BaseResponse } from "common/types"
 import { Todolist } from "./todolistsApi.types"
-import { DomainTodolist } from "../model/todolistsSlice"
 import { baseApi } from "baseApi"
+import { FilterValuesType } from "../ui/Todolists/Todolist/FilterTasksButtons/FilterTasksButtons"
+import { RequestStatus } from "app/appSlice"
+
+export type DomainTodolist = Todolist & {
+  filter: FilterValuesType
+  entityStatus: RequestStatus
+}
 
 export const todolistsApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
@@ -48,24 +53,3 @@ export const {
   useDeleteTodolistMutation,
   useUpdateTodolistTitleMutation,
 } = todolistsApi
-
-//NOT USED
-export const _todolistsApi = {
-  //DONE
-  getTodolists() {
-    return instance.get<Todolist[]>("todo-lists")
-  },
-  //DONE
-  createTodolist(title: string) {
-    return instance.post<BaseResponse<{ item: Todolist }>>("todo-lists", { title })
-  },
-  //DONE
-  deleteTodolist(id: string) {
-    return instance.delete<BaseResponse>(`todo-lists/${id}`)
-  },
-  //DONE
-  updateTodolist(payload: { id: string; title: string }) {
-    const { title, id } = payload
-    return instance.put<BaseResponse>(`todo-lists/${id}`, { title })
-  },
-}

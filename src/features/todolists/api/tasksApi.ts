@@ -57,26 +57,3 @@ export const tasksApi = baseApi.injectEndpoints({
 })
 
 export const { useGetTasksQuery, useCreateTaskMutation, useDeleteTaskMutation, useUpdateTaskMutation } = tasksApi
-
-//NOT USED
-export const _tasksApi = {
-  //DONE
-  getTasks(todolistId: string) {
-    return instance.get<GetTasksResponse>(`todo-lists/${todolistId}/tasks`)
-  },
-  //DONE
-  createTask(payload: { title: string; todolistId: string }) {
-    const { title, todolistId } = payload
-    return instance.post<BaseResponse<{ item: DomainTask }>>(`todo-lists/${todolistId}/tasks`, { title })
-  },
-  //DONE
-  deleteTask(payload: { todolistId: string; taskId: string }) {
-    const { taskId, todolistId } = payload
-    return instance.delete<BaseResponse>(`todo-lists/${todolistId}/tasks/${taskId}`)
-  },
-  //DONE
-  updateTask(payload: { todolistId: string; taskId: string; model: UpdateTaskModel }) {
-    const { taskId, todolistId, model } = payload
-    return instance.put<BaseResponse<{ item: DomainTask }>>(`todo-lists/${todolistId}/tasks/${taskId}`, model)
-  },
-}
