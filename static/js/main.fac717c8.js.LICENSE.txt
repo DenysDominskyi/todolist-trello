@@ -1,3 +1,5 @@
+/*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */
+
 /**
  * @license React
  * react-dom.production.min.js
@@ -10,9 +12,9 @@
 
 /**
  * @license React
- * react-is.production.min.js
+ * react-is.production.js
  *
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -49,9 +51,11 @@
  */
 
 /**
- * @mui/styled-engine v6.1.1
+ * @license React
+ * use-sync-external-store-with-selector.production.js
  *
- * @license MIT
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
+ *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
