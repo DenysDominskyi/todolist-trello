@@ -1,15 +1,18 @@
 import { EditableSpan } from "common/components"
 import { TaskStatus } from "common/enums"
-import { useAppDispatch } from "common/hooks"
 import { DomainTask, UpdateTaskModel } from "../../../../../api/tasksApi.types"
-import { DomainTodolist } from "../../../../../model/todolistsSlice"
 import { getListItemSx } from "./Task.styles"
 import { ChangeEvent } from "react"
-import DeleteIcon from "@mui/icons-material/Delete"
+
+
+import ClearIcon from '@mui/icons-material/Clear';
+import RemoveIcon from '@mui/icons-material/Remove';
+
 import Checkbox from "@mui/material/Checkbox"
 import IconButton from "@mui/material/IconButton"
 import ListItem from "@mui/material/ListItem"
 import { useDeleteTaskMutation, useUpdateTaskMutation } from "features/todolists/api/tasksApi"
+import { DomainTodolist } from "features/todolists/api/todolistsApi"
 
 type Props = {
   task: DomainTask
@@ -17,7 +20,6 @@ type Props = {
 }
 
 export const Task = ({ task, todolist }: Props) => {
-  const dispatch = useAppDispatch()
 
   const [deleteTask] = useDeleteTaskMutation()
   const [updateTask] = useUpdateTaskMutation()
@@ -52,7 +54,8 @@ export const Task = ({ task, todolist }: Props) => {
   const disabled = todolist.entityStatus === "loading"
 
   return (
-    <ListItem key={task.id} sx={getListItemSx(task.status === TaskStatus.Completed)}>
+    <ListItem key={task.id} sx={getListItemSx(task.status === TaskStatus.Completed)}
+    style={{fontWeight: 'bold', borderBottom: '1px solid gray'}}>
       <div>
         <Checkbox
           checked={task.status === TaskStatus.Completed}
@@ -62,7 +65,7 @@ export const Task = ({ task, todolist }: Props) => {
         <EditableSpan value={task.title} onChange={changeTaskTitleHandler} disabled={disabled} />
       </div>
       <IconButton onClick={removeTaskHandler} disabled={disabled}>
-        <DeleteIcon />
+        <ClearIcon fontSize="small" color="primary"/>
       </IconButton>
     </ListItem>
   )

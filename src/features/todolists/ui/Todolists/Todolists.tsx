@@ -16,7 +16,13 @@ export const Todolists = () => {
       {todolists?.map((tl) => {
         return (
           <Grid key={tl.id}>
-            <Paper sx={{ p: "0 20px 20px 20px" }}>
+            <Paper
+              sx={{
+                p: "0 20px 20px 20px",
+                backgroundImage:
+                  "linear-gradient(115deg, rgba(90, 134, 140, 0.08), rgba(157, 226, 227, 0.08), rgba(118, 89, 176, 0.1))",
+              }}
+            >
               <Todolist key={tl.id} todolist={tl} />
             </Paper>
           </Grid>
